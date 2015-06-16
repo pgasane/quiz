@@ -1,4 +1,26 @@
+<<<<<<< HEAD
 node_modules
 .DS_Store
 npm-debug.log
 private.txt
+=======
+.DS_Store
+
+# Images
+images/avatars/
+images/captchas/
+images/smileys/
+images/member_photos/
+images/signature_attachments/
+images/pm_attachments/
+
+# For security do not publish the following files
+system/expressionengine/config/database.php
+system/expressionengine/config/config.php
+
+# Caches
+sized/
+thumbs/
+_thumbs/
+*/expressionengine/cache/*
+>>>>>>> e49e0eb5a12a7debb731ecbcb6a92b2784b603cb
