@@ -6,3 +6,13 @@ h2 span, section h3 { display: none; }
 body				{ font-size: xx-large; }
 input, button		{ font-size: x-large; }
 footer				{ font-size: large; }
+
+.picture {
+  height: 55px;
+  width:  58px; 
+  -moz-box-shadow: -1px -1px #888;
+  -webkit-box-shadow: -1px -1px #888;
+  border-radius: 4px;
+  background-image: url(/images/images_smartphone.jpg);
+  float: left;
+}
