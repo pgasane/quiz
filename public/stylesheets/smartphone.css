@@ -1,11 +1,19 @@
-body 				{ background: #333; font-size: xx-large;}
+body{
+	background: #333;
+	font-size: xx-large;
+}
 
-#page-wrap:after	{ content: "Smartphone Layout"; }
+#container{
+	content: "Smartphone Layout";
+}
 
-h2 span, section h3 { display: none; }
-body				{ font-size: xx-large; }
-input, button		{ font-size: x-large; }
-footer				{ font-size: large; }
+h2, span, section, h3 {
+
+}
+
+footer{
+	font-size: large;
+}
 
 .picture {
   height: 55px;
