@@ -9,17 +9,39 @@ exports.load = function(req, res, next, quizId) {
 			if (quiz) {
 				req.quiz = quiz;
 				next();
-			} else { next(new Error('No existe quizId=' + quizId +
-				'\nSeleccione Preguntas en el menú de la izquierda')); }
+			} else { next(new Error('No existe quizId=' + quizId)); }
 		}
 	).catch(function(error) {next(error);});	
 };
 
-//GET /quizes
+
+//GET /quizes?search=texto_a_buscar
+// {where: ["pregunta like ?", search]}]
 exports.index = function(req, res) {
-	models.Quiz.findAll().then(function(quizes) {
-		res.render('quizes/index', { quizes: quizes });
-	})
+  // Variable que contendrá la claúsula SQL de búsqueda
+  // Se inicializa sin contenido, {}
+  var where = {};
+
+  // Variable que contendrá el valor introducido por teclado o vacío
+  // si no se ha tecleado nada
+  var search = req.query.search || '';
+
+  // Si se ha tecleado algún patrón a buscar, se compone la claúsula SQL Where
+  // Se sustituyen todos los blancos por un % seguido del texto a buscar y se inicia
+  // y termina la cadena de búsqueda con %. 
+  // Ejemplo: se busca la cadena "a i a e p". Se sustituye por '%a%i%a%e%p%'.
+  // Se compone la siguiente sentencia SQL:
+  // SELECT * FROM `Quizzes` WHERE pregunta like '%a%i%a%e%p%';
+  // Y, finalmente, se mostrará la pregunta "Capital de Portugal" 
+  if(req.query.search) {
+    where = {where: ["pregunta like ?", '%' + search.replace(/ /+g, '%') + '%']};
+  }
+
+  // Se realiza la búsqueda en la BD con la claúsula Where compuesta y se lanza
+  // la vista index.ejs con el resultado obtenido
+  models.Quiz.findAll(where).then(function(quizes) {
+    res.render('quizes/index.ejs', {quizes: quizes, query: search});
+  }).catch(function(error) { next(error);} );
 };
 
 
@@ -27,6 +49,7 @@ exports.index = function(req, res) {
 exports.show = function(req, res) {
 	res.render('quizes/show', { quiz: req.quiz });
 };
+
 
 //GET /quizes/:id/answer
 exports.answer = function(req, res) {
