@@ -34,7 +34,7 @@ exports.index = function(req, res) {
   // SELECT * FROM `Quizzes` WHERE pregunta like '%a%i%a%e%p%';
   // Y, finalmente, se mostrará la pregunta "Capital de Portugal" 
   if(req.query.search) {
-    where = {where: ["pregunta like ?", '%' + search.replace(/ /+g, '%') + '%']};
+    where = {where: ["pregunta like ?", '%' + search.replace(/ /g, '%') + '%']};
   }
 
   // Se realiza la búsqueda en la BD con la claúsula Where compuesta y se lanza
