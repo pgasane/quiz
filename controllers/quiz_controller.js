@@ -59,3 +59,26 @@ exports.answer = function(req, res) {
 		} 
 	res.render('quizes/answer', { quiz: req.quiz, respuesta: resultado });
 };
+
+
+//GET /quizes/new
+exports.new = function(req, res) {
+  // Se crea el objeto quiz con los datos pregunta y respuesta nuevos
+  var quiz = models.Quiz.build({pregunta: "Pregunta", respuesta: "Respuesta"});
+
+  res.render('quizes/new', { quiz: quiz });
+};
+
+
+//GET /quizes/create
+exports.create = function(req, res) {
+  // Se crea el objeto quiz con los datos pregunta y respuesta nuevos
+  // cargados en la pantalla new
+  var quiz = models.Quiz.build( req.body.quiz );
+
+  // Guarda en la BD la nueva pregunta con su respuesta
+  // Si no hay error, lanza la vista quizes que mostrará la lista de preguntas
+  quiz.save({fields: ["pregunta", "respuesta"]}).then(function() {
+    res.redirect('/quizes');
+  });
+};
