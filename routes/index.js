@@ -6,7 +6,7 @@ var authorController = require('../controllers/author_controller');
 
 /* GET home page. */
 router.get('/', function(req, res) {
-  res.render('index', { title: 'Quiz' });
+  res.render('index', { title: 'Quiz', errors: [] });
 });
 
 // Autoload de comandos con :quizId
@@ -19,7 +19,7 @@ router.get('/', function(req, res) {
 router.param('quizId', quizController.load);
 
 
-/* GET Definición de rutas de /quizes page. */
+/* GET Definición de rutas de /quizes pages. */
 router.get('/quizes', 						quizController.index);
 router.get('/quizes/:quizId(\\d+)', 		quizController.show);
 router.get('/quizes/:quizId(\\d+)/answer', 	quizController.answer);
@@ -29,4 +29,6 @@ router.post('/quizes/create',				quizController.create);
 /* GET Author page. */
 router.get('/author', authorController.author);
 
+// Exportamos nuestro encaminador para que pueda atender las peticiones
+// que realicen los clientes
 module.exports = router;
