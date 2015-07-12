@@ -40,14 +40,14 @@ exports.index = function(req, res) {
   // Se realiza la búsqueda en la BD con la claúsula Where compuesta y se lanza
   // la vista index.ejs con el resultado obtenido
   models.Quiz.findAll(where).then(function(quizes) {
-    res.render('quizes/index.ejs', {quizes: quizes, query: search});
+    res.render('quizes/index.ejs', {quizes: quizes, query: search, errors: [] });
   }).catch(function(error) { next(error);} );
 };
 
 
 //GET /quizes/:id
 exports.show = function(req, res) {
-	res.render('quizes/show', { quiz: req.quiz });
+	res.render('quizes/show', { quiz: req.quiz, errors: [] });
 };
 
 
@@ -57,7 +57,13 @@ exports.answer = function(req, res) {
 		if (req.query.respuesta === req.quiz.respuesta) {
 				resultado = 'Correcto';
 		} 
-	res.render('quizes/answer', { quiz: req.quiz, respuesta: resultado });
+	res.render(
+    'quizes/answer',
+    { quiz: req.quiz,
+      respuesta: resultado,
+      errors: []
+    }
+  );
 };
 
 
@@ -66,11 +72,11 @@ exports.new = function(req, res) {
   // Se crea el objeto quiz con los datos pregunta y respuesta nuevos
   var quiz = models.Quiz.build({pregunta: "Pregunta", respuesta: "Respuesta"});
 
-  res.render('quizes/new', { quiz: quiz });
+  res.render('quizes/new', { quiz: quiz, errors: [] });
 };
 
-
-//GET /quizes/create
+/*
+// POST /quizes/create
 exports.create = function(req, res) {
   // Se crea el objeto quiz con los datos pregunta y respuesta nuevos
   // cargados en la pantalla new
@@ -81,4 +87,35 @@ exports.create = function(req, res) {
   quiz.save({fields: ["pregunta", "respuesta"]}).then(function() {
     res.redirect('/quizes');
   });
+};
+*/
+
+// POST /quizes/create
+exports.create = function(req, res) {
+  // Se crea el objeto quiz con los datos pregunta y respuesta nuevos
+  // cargados en la pantalla new
+  var quiz = models.Quiz.build( req.body.quiz );
+
+  // Para salvar el problema .then no existente en .validate
+  var errors = quiz.validate();
+
+  // Si hay errores, los tratamos
+  if (errors) {
+      // Se convierte errors en Array para poder tratarla con el código
+      // propuesta en la práctica
+      var errores = new Array();
+
+      // Recorremos el nuevo Array de errores
+      var i = 0;
+      for (var prop in errors) errores[i++] = {message: errors[prop]};
+      
+      // Se reenvía la vista new con los errores encontrados
+      res.render('quizes/new', {quiz: quiz, errors: errores});
+  } else {
+      // No hay error. Se guarda la pregunta en la DB
+      // y se muestra la lista de preguntas actualizada
+      quiz
+      .save({fields: ["pregunta", "respuesta"]})
+      .then( function() { res.redirect('/quizes')});
+  }
 };
