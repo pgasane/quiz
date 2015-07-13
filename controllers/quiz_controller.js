@@ -75,20 +75,6 @@ exports.new = function(req, res) {
   res.render('quizes/new', { quiz: quiz, errors: [] });
 };
 
-/*
-// POST /quizes/create
-exports.create = function(req, res) {
-  // Se crea el objeto quiz con los datos pregunta y respuesta nuevos
-  // cargados en la pantalla new
-  var quiz = models.Quiz.build( req.body.quiz );
-
-  // Guarda en la BD la nueva pregunta con su respuesta
-  // Si no hay error, lanza la vista quizes que mostrará la lista de preguntas
-  quiz.save({fields: ["pregunta", "respuesta"]}).then(function() {
-    res.redirect('/quizes');
-  });
-};
-*/
 
 // POST /quizes/create
 exports.create = function(req, res) {
@@ -118,4 +104,45 @@ exports.create = function(req, res) {
       .save({fields: ["pregunta", "respuesta"]})
       .then( function() { res.redirect('/quizes')});
   }
+};
+
+
+// GET /quizes/:id/edit
+exports.edit = function(req, res) {
+  // Se crea una variable que contendrá el objeto quiz
+  var quiz = req.quiz;
+
+  // Se envía la vista edit que editará la pregunta actual
+  res.render('quizes/edit', {quiz: quiz, errors: [] });
+};
+
+
+// PUT /quizes/:id
+exports.update = function(req, res) {
+  // Se cargan los datos que llegan del body
+  req.quiz.pregunta = req.body.quiz.pregunta;
+  req.quiz.respuesta = req.body.quiz.respuesta;
+
+ // Para salvar el problema .then no existente en .validate
+  var errors = req.quiz.validate();
+
+  // Si hay errores, los tratamos
+  if (errors) {
+      // Se convierte errors en Array para poder tratarla con el código
+      // propuesta en la práctica
+      var errores = new Array();
+
+      // Recorremos el nuevo Array de errores
+      var i = 0;
+      for (var prop in errors) errores[i++] = {message: errors[prop]};
+      
+      // Se reenvía la vista new con los errores encontrados
+      res.render('quizes/new', {quiz: quiz, errors: errores});
+  } else {
+      // No hay error. Se guarda la pregunta en la DB
+      // y se muestra la lista de preguntas actualizada
+      req.quiz
+      .save({fields: ["pregunta", "respuesta"]})
+      .then( function() { res.redirect('/quizes')});
+  }  
 };
