@@ -23,9 +23,15 @@ app.use(partials());
 app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
 app.use(bodyParser.json());
+
+// Para lo métodos POST
 app.use(bodyParser.urlencoded());
+
 app.use(cookieParser());
+
+// Pra la operación de Borrado de preguntas
 app.use(methodOverride('_method'));
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
