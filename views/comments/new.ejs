@@ -1,0 +1,8 @@
+Añadir comentario: 
+<p>
+	<form method="post" action="/quizes/<%=quizId%>/comments/new">
+		<input type="text id="comment" name="comment[texto]" value="Texto" /><p>
+		<button type="submit">Enviar</button>
+		<% include _form.ejs %>
+	</form>
+</p>

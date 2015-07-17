@@ -4,7 +4,9 @@ var models = require('../models/models.js');
 
 // Autoload que se ejecuta si la URL incluye el parámetro quizId
 exports.load = function(req, res, next, quizId) {
-	models.Quiz.find(quizId).then(
+	models.Quiz.find(
+      { where: { id: Number(quizId) }, include: [{ model: models.Comment}] })
+    .then(
 		function (quiz) {
 			if (quiz) {
 				req.quiz = quiz;
@@ -124,13 +126,18 @@ exports.update = function(req, res) {
   req.quiz.respuesta = req.body.quiz.respuesta;
   req.quiz.categoria = req.body.quiz.categoria;
 
- // Para salvar el problema .then no existente en .validate
+  // Control para evitar la selección de "Categoría" como categoría
+  if (req.body.quiz.categoria === "Categoría") {
+    console.log = ("Se ha elegido CATEGORÍA EN EL EDIT");
+  }
+
+  // Para salvar el problema .then no existente en .validate
   var errors = req.quiz.validate();
 
   // Si hay errores, los tratamos
   if (errors) {
       // Se convierte errors en Array para poder tratarla con el código
-      // propuesta en la práctica
+      // propuesto en la práctica
       var errores = new Array();
 
       // Recorremos el nuevo Array de errores
