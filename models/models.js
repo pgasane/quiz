@@ -33,15 +33,27 @@ var sequelize = new Sequelize(DB_name, user, pwd,
 var quiz_path = path.join(__dirname, 'quiz');
 var Quiz = sequelize.import(quiz_path);
 
+// Importar la definición de la tabla Comment hecha en comment.js
+var comment_path = path.join(__dirname, 'comment');
+var Comment = sequelize.import(comment_path);
+
+// Establecer la relación 1-a-N con la tabla Quiz
+Comment.belongsTo(Quiz);
+Quiz.hasMany(Comment);
+
 // Exportar la definición de la tabla Quiz para que sea posible accedar a
 // la tabla desde otras partes de la aplicación con el import correspondiente
 exports.Quiz = Quiz;
+
+// Exportar la definición de la tabla Comment para que sea posible accedar a
+// la tabla desde otras partes de la aplicación con el import correspondiente
+exports.Comment = Comment;
 
 // Inicializar la tabla de preguntas en la DB solo si está vacía
 // success() ejecuta el manejador una vez creada la tabla
 sequelize.sync().success(function(){
 	Quiz.count().success(function(count){
-		if (count === 0) {
+		if (count < 2) {
 			
 			Quiz.create({pregunta: 'Capital de Italia',
 						 respuesta: 'Roma',
@@ -54,35 +66,3 @@ sequelize.sync().success(function(){
 		};
 	});
 });
-
-// Importar la definición de la tabla Comment hecha en comment.js
-var comment_path = path.join(__dirname, 'comment');
-var Comment = sequelize.import(quiz_path);
-
-// Establecer la relación 1-a-N con la tabla Quiz
-Comment.belongsTo(Quiz);
-Quiz.hasMany(Comment);
-
-// Exportar la definición de la tabla Comment para que sea posible accedar a
-// la tabla desde otras partes de la aplicación con el import correspondiente
-exports.Comment = Comment;
-
-/* NO ES NECESARIO INICIALIZAR LA TABLA COMMENT AL TENER UNA RELACIÓN CON QUIZ
-// Inicializar la tabla de preguntas en la DB solo si está vacía
-// success() ejecuta el manejador una vez creada la tabla
-sequelize.sync().success(function(){
-	Quiz.count().success(function(count){
-		if (count === 0) {
-			
-			Quiz.create({pregunta: 'Capital de Italia',
-						 respuesta: 'Roma',
-						 categoria: 'humanidades'});
-
-			Quiz.create({pregunta: 'Capital de Portugal',
-						 respuesta: 'Lisboa',
-						 categoria: 'humanidades'})
-			.then(function(){console.log('Base de datos inicializada.')});
-		};
-	});
-});
-*/

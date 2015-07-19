@@ -6,7 +6,7 @@ var models = require('../models/models.js');
 //GET /quizes/:quizId/comments/new
 exports.new = function(req, res) {
   // Se invoca la vista new.ejs pasando como parámetro el Id del quiz actual
-  res.render('comments/new.ejs', { quizid: req.params.quizId, errors: [] });
+  res.render('comments/new.ejs', { quizId: req.params.quizId, errors: [] });
 };
 
 
@@ -41,6 +41,6 @@ exports.create = function(req, res) {
       // y se muestra la lista de preguntas actualizada
       comment
       .save()
-      .then( function() { res.redirect('/quizes') + req.params.quizId});
-  }
+      .then(function() { res.redirect('/quizes/'+req.params.quizId) })
+  };    
 };

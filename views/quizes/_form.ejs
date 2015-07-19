@@ -4,9 +4,9 @@
 <label for="resp" class="rem">Respuesta:</label>
 <input type="text" id="resp" name="quiz[respuesta]" value="<%= quiz.respuesta %>"/><p>
 
-<label for="categoria" class="rem">Categoría:</label>
-<select id="categoria" name="quiz[categoria]" value="<%= quiz.categoria %>">
-	<option value="Categoría" <% if (quiz.categoria === "Categoría") { %>selected <% } %> >Categoría</option>
+<label for="cate" class="rem">Categoría:</label>
+
+<select id="cate" name="quiz[categoria] value="<%= quiz.categoria %>">
 	<option value="Otro" <% if (quiz.categoria === "Otro") { %>selected <% } %> >
 	 Otro</option>
 	<option value="Humanidades" <% if (quiz.categoria === "Humanidades") { %>selected <% } %> >Humanidades</option>
@@ -18,5 +18,7 @@
 	 Tecnología</option>
 </select>
 
+<p>
+
 <a href="/quizes"><button type="button">Cancelar</button></a>
-<input type="submit" value="Guardar">
+<input type="submit" value="Salvar">

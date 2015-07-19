@@ -2,7 +2,8 @@
 // models.js cargará, al ser invocado, la BD Quiz
 var models = require('../models/models.js');
 
-// Autoload que se ejecuta si la URL incluye el parámetro quizId
+// Autoload :id
+// Se ejecuta si la URL incluye el parámetro quizId
 exports.load = function(req, res, next, quizId) {
 	models.Quiz.find(
       { where: { id: Number(quizId) }, include: [{ model: models.Comment}] })
@@ -72,7 +73,7 @@ exports.answer = function(req, res) {
 //GET /quizes/new
 exports.new = function(req, res) {
   // Se crea el objeto quiz con los datos pregunta y respuesta nuevos
-  var quiz = models.Quiz.build({pregunta: "Pregunta", respuesta: "Respuesta", categoria: "Categoria"});
+  var quiz = models.Quiz.build({pregunta: "Pregunta", respuesta: "Respuesta", categoria: "Otros"});
 
   res.render('quizes/new', { quiz: quiz, errors: [] });
 };
@@ -126,10 +127,22 @@ exports.update = function(req, res) {
   req.quiz.respuesta = req.body.quiz.respuesta;
   req.quiz.categoria = req.body.quiz.categoria;
 
-  // Control para evitar la selección de "Categoría" como categoría
-  if (req.body.quiz.categoria === "Categoría") {
-    console.log = ("Se ha elegido CATEGORÍA EN EL EDIT");
-  }
+/*
+  req.quiz
+  .validate()
+  .then(
+    function(err){
+      if (err) {
+        res.render('quizes/edit', {quiz: req.quiz, errors: errores});
+      } else {
+        req.quiz // save: guarda campos pregunta y respuesta en DB 
+        .save({fields: ["pregunta", "respuesta", "categoria"]})
+        .then( function(){ res.redirect('/quizes')}) ;
+      } 
+    }
+  );
+};
+*/
 
   // Para salvar el problema .then no existente en .validate
   var errors = req.quiz.validate();
@@ -145,7 +158,7 @@ exports.update = function(req, res) {
       for (var prop in errors) errores[i++] = {message: errors[prop]};
       
       // Se reenvía la vista new con los errores encontrados
-      res.render('quizes/new', {quiz: quiz, errors: errores});
+      res.render('quizes/edit', {quiz: req.quiz, errors: errores});
   } else {
       // No hay error. Se guarda la pregunta en la DB
       // y se muestra la lista de preguntas actualizada

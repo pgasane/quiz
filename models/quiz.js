@@ -12,11 +12,11 @@ module.exports = function(sequelize, DataTypes) {
 				type: DataTypes.STRING,
 				validate: { notEmpty: {msg: "-> Falta respuesta"}},
 				validate: { notContains: "Respuesta"}
-			}, 
+			},
 			categoria: {
 				type: DataTypes.STRING,
-				validate: { notEmpty: {msg: "-> Falta categoría"}},
-				validate: { notContains: "Categoría"}
+				validate: { notEmpty: {msg: "-> Falta categoria"}},
+				validate: { notContains: ""}
 			}
 		}		
 	);
