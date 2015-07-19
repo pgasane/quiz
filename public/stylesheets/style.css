@@ -20,6 +20,8 @@ body {
 	padding: 1%;
 }
 
+.right{ float: right;}
+
 section > div{
 	padding: 20px;
 }

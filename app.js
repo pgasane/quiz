@@ -6,6 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var partials = require('express-partials');
 var methodOverride = require('method-override');
+var session = require('express-session');
 
 var routes = require('./routes/index');
 
@@ -25,13 +26,41 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 
 // Para lo métodos POST
-app.use(bodyParser.urlencoded());
-app.use(cookieParser());
+//app.use(bodyParser.urlencoded());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+// Se indica una semilla para el cifrado de cookies
+// Mejor sería generar una clave aleatoria completa
+app.use(cookieParser('Quiz 2015'));
+
+// Para la gestión de sesiones de usuario
+//app.use(session());
+app.use(session({
+secret: 'semilla',
+resave: false,
+saveUninitialized: true
+}));
 
 // Para la operación de Borrado de preguntas
 app.use(methodOverride('_method'));
 
+// Define la existencia del middleware stático en el recurso public
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Helpers dinámicos :
+// Guardar path anterior al Login
+// Hacer visible la sessión a las vistas de la app
+app.use(function(req, res, next) {
+    // Guardar path anterior
+    if (!req.path.match(/\/login|\/logout/)) {
+        req.session.redir = req.path;
+    }
+
+    // Hacer visible req.session en las vistas
+    req.locals.session = req.session;
+    // Para que se sigan procesando los middleware
+    next();
+});
 
 app.use('/', routes);
 

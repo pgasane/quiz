@@ -3,6 +3,7 @@ var router = express.Router();
 
 var quizController = require('../controllers/quiz_controller');
 var commentController = require('../controllers/comment_controller');
+var sessionController = require('../controllers/session_controller');
 var authorController = require('../controllers/author_controller');
 
 /* GET home page. */
@@ -19,8 +20,14 @@ router.get('/', function(req, res) {
 // [http://expressjs.com/4x/api.html#router.param]. 
 router.param('quizId', quizController.load);
 
+// GET Definición de rutas de sesión. 
+router.get('/login',		sessionController.new);
+router.post('/login',		sessionController.create);
+// router.delete('/logout',	sessionController.destroy);
+router.get('/logout',		sessionController.destroy);
 
-/* GET Definición de rutas de /quizes pages. */
+
+// GET Definición de rutas de /quizes pages. 
 router.get('/quizes', 						quizController.index);
 router.get('/quizes/:quizId(\\d+)', 		quizController.show);
 router.get('/quizes/:quizId(\\d+)/answer', 	quizController.answer);
