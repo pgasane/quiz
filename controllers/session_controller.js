@@ -3,7 +3,6 @@ exports.new = function(req, res) {
   // Se crea y/o inicializa la variable de errores de sesión
   var errors = req.session.errors || {};
   req.session.errors = {};
-
   res.render('sessions/new', { errors: errors });
 };
 
@@ -25,7 +24,7 @@ exports.create = function(req, res) {
       return;
     }
 
-    // En caso contrario, creamos la sesión
+    // Si no hay errrores, creamos la sesión
     req.session.user = {id:user.id, username:user.username};
 
     // Y retornamos al path anterior al login

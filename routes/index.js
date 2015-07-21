@@ -23,9 +23,8 @@ router.param('quizId', quizController.load);
 // GET Definición de rutas de sesión. 
 router.get('/login',		sessionController.new);
 router.post('/login',		sessionController.create);
-// router.delete('/logout',	sessionController.destroy);
 router.get('/logout',		sessionController.destroy);
-
+// router.delete('/logout',	sessionController.destroy);
 
 // GET Definición de rutas de /quizes pages. 
 router.get('/quizes', 						quizController.index);

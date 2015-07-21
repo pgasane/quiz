@@ -35,11 +35,7 @@ app.use(cookieParser('Quiz 2015'));
 
 // Para la gestión de sesiones de usuario
 //app.use(session());
-app.use(session({
-secret: 'semilla',
-resave: false,
-saveUninitialized: true
-}));
+app.use(session({secret: 'semilla', resave: false, saveUninitialized: true}));
 
 // Para la operación de Borrado de preguntas
 app.use(methodOverride('_method'));
@@ -57,11 +53,13 @@ app.use(function(req, res, next) {
     }
 
     // Hacer visible req.session en las vistas
-    req.locals.session = req.session;
+    res.locals.session = req.session;
     // Para que se sigan procesando los middleware
     next();
 });
 
+// Debe ir al final de todas las gestiones de las rutas
+// para tratar como errores todas las no definidas
 app.use('/', routes);
 
 // catch 404 and forward to error handler
