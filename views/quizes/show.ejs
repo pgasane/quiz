@@ -5,9 +5,19 @@
 </form>
 
 <p><strong>Comentarios:</strong></p>
-<% for(index in quiz.comments) { %>
-	<p><%= +index+1 %>- <%= quiz.comments[index].texto %></p>
-<% } %>
+
+ 	<% for (index in quiz.comments) { %>
+		<% if (quiz.comments[index].publicado || session.user) { %>
+		<p>- 
+			<%= quiz.comments[index].texto %>
+			<% if (session.user && !quiz.comments[index].publicado) {%>
+			<a href="/quizes/<%= quiz.id %>/comments/<%= quiz.comments[index].id %>/publish">
+				<button>Publicar</button>
+			</a>
+			<% } %>
+		</p>
+	 	<% } %>
+	<% } %>
 
 <p><a href="/quizes/<%= quiz.id %>/comments/new"><button>Nuevo comentario</button></a></p>
 
