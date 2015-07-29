@@ -43,6 +43,35 @@ app.use(methodOverride('_method'));
 // Define la existencia del middleware stático en el recurso public
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+// Auto-logout si la sesión está inactiva más de 2 minutos entre transacciones
+app.use(function(req, res, next) {
+    // Si hay un usuario autenticado
+    if(req.session.user) {
+        // Si no hay registro del tiempo de actividad, se crea
+        if (!req.session.counterTime) {
+            req.session.counterTime = (new Date()).getTime();
+            req.session.secondsToLogout = 120;
+        } else {
+            // Si hay registro, comprobamos si han pasados 2 minutos sin actividad
+            if ((new Date()).getTime() - req.session.counterTime > 120000) {
+                // Si es así, se destruye el usuario (la sesión) y el contador de tiempo
+                console.log("La sesión de " + req.session.user.username + " ha caducado.");
+                delete req.session.user;
+                delete req.session.counterTime;
+            } else {
+                // Si NO han pasado 2 minutos entre transacciones, se actualiza el contador
+                // de tiempo
+                req.session.counterTime = (new Date()).getTime();
+                req.session.secondsToLogout = 120;
+            }
+        }
+    }
+    // En este punto la sessión está activa y no se ha superado el tiempo de inactividad
+    // por lo que podemos seguir ejecundo los demás MW
+    next();
+});
+
 // Helpers dinámicos :
 // Guardar path anterior al Login
 // Hacer visible la sessión a las vistas de la app

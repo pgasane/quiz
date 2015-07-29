@@ -27,7 +27,7 @@ exports.create = function(req, res) {
   userController.autenticar(login, password, function(error, user) {
     // En caso de errores los retornamos
     if (error) {
-      req.session.errors = [{"message": 'Se ha producido un error: '+error}];
+      req.session.errors = [{"message": 'Se ha producido un error: '+ error}];
       res.redirect("/login");
       // Y terminamos el proceso
       return;
@@ -36,8 +36,13 @@ exports.create = function(req, res) {
     // Si no hay errrores, creamos la sesión
     req.session.user = {id:user.id, username:user.username};
 
-    // Y retornamos al path anterior al login
-    res.redirect(req.session.redir.toString());
+    // Y retornamos al path anterior si el valor de redir no es null.
+    // En caso contrario, redirigimos al path /login
+    if (req.session.redir) {
+      res.redirect(req.session.redir.toString());
+    } else {
+      res.redirect("/login");
+    }
   });
 };
 

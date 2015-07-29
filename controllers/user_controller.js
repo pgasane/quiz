@@ -7,11 +7,10 @@ var users = { admin: {id:1, username:"admin", password:"1234"},
 // Si lo está, devuelve sus datos
 // En caso, se lanza una excepción con el error correspondiente
 exports.autenticar = function(login, password, callback) {
-  console.log("login:"+login+" password:"+password);
+  //console.log("login:"+login+" password:"+password);
   if (users[login]) {
-  	  console.log("login econtrado");
       if (password === users[login].password) {
-            console.log("password econtrado");
+            console.log("¡Login y password encontrados!");
             callback(null, users[login]);
       }
       else { callback(new Error('Password erróneo.')); }
